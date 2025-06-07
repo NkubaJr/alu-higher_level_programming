@@ -1,18 +1,22 @@
 #!/usr/bin/node
-const req = require('request');
-const url = process.argv[2];
 
-let count = 0;
-let data;
-req.get(url, (err, res) => {
-	  if (err) console.log(err);
-	  else {
-		      data = JSON.parse(res.body).results;
-		      data.forEach((obj) => {
-			            obj.characters.forEach((character) => {
-					            if (character.includes('/18/')) count++;
-					          });
-			          });
+const request = require('request')
+
+const url = process.argv[2]
+
+request(url, function (error, response, body) {
+	  if (!error) {
+		      const films = JSON.parse(body).results
+		      let count = 0
+		      for (const film of films) {
+			            for (const character of film.characters) {
+					            if (character.includes('/18/')) {
+							              count++
+							              break
+							            }
+					          }
+			          }
+		      console.log(count)
 		    }
-	  console.log(count);
-});
+})
+
